@@ -4,12 +4,10 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.json.JSONObject;
 import com.example.yin.domain.History;
+import com.example.yin.domain.RankList;
 import com.example.yin.domain.Song;
 import com.example.yin.domain.SongList;
-import com.example.yin.service.HistoryService;
-import com.example.yin.service.SongListService;
-import com.example.yin.service.SongService;
-import com.example.yin.service.UserService;
+import com.example.yin.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.mahout.cf.taste.common.TasteException;
 import org.apache.mahout.cf.taste.impl.model.file.FileDataModel;
@@ -53,14 +51,18 @@ public class RecommendController {
     @Autowired
     private HistoryService historyService;
     
-    private static final String MODEL_FILE = "data.csv";
+    @Autowired
+    private RankListService rankListService;
+    
+    private static final String SONG_MODEL_FILE = "song_data.csv";
+    private static final String SONGLIST_MODEL_FILE = "songlist_data.csv";
     
     @GetMapping("/recommend/{userId}")
     public JSONObject recommend(@PathVariable Long userId) {
         JSONObject jsonObject = new JSONObject();
         
         List<Song> recommendSongList = getRecommendedSongs(userId);
-        List<SongList> recommendSongLists = songListService.allSongList().stream().limit(5).collect(Collectors.toList());
+        List<SongList> recommendSongLists = getRecommendedSongLists(userId);
         
         jsonObject.put("recommendSongLists", recommendSongLists);
         jsonObject.put("recommendSongList", recommendSongList);
@@ -69,11 +71,11 @@ public class RecommendController {
     }
     
     private List<Song> getRecommendedSongs(Long userId) {
-        Path dataModelPath = Paths.get(MODEL_FILE);
-        int n = 3;
+        Path dataModelPath = Paths.get(SONG_MODEL_FILE);
+        int n = (int) userService.count();
         
         try {
-            generateDataModelFile(dataModelPath);
+            generateSongDataModelFile(dataModelPath);
             List<RecommendedItem> recommendedItem = getRecommendedItem(userId, 5, n, dataModelPath);
             if (CollUtil.isEmpty(recommendedItem)) {
                 throw new RuntimeException("推荐数为0");
@@ -83,8 +85,28 @@ public class RecommendController {
                 .map(RecommendedItem::getItemID)
                 .collect(Collectors.toList()));
         } catch (Exception e) {
-            log.error("推荐过程中发生错误", e);
+            log.error("推荐歌曲过程中发生错误", e);
             return RandomUtil.randomEles(songService.list(), 5);
+        }
+    }
+    
+    private List<SongList> getRecommendedSongLists(Long userId) {
+        Path dataModelPath = Paths.get(SONGLIST_MODEL_FILE);
+        int n = (int) userService.count();
+        
+        try {
+            generateSongListDataModelFile(dataModelPath);
+            List<RecommendedItem> recommendedItem = getRecommendedItem(userId, 5, n, dataModelPath);
+            if (CollUtil.isEmpty(recommendedItem)) {
+                throw new RuntimeException("推荐数为0");
+            }
+            return songListService.listByIds(recommendedItem
+                .stream()
+                .map(RecommendedItem::getItemID)
+                .collect(Collectors.toList()));
+        } catch (Exception e) {
+            log.error("推荐歌单过程中发生错误", e);
+            return RandomUtil.randomEles(songListService.allSongList(), 5);
         }
     }
     
@@ -109,7 +131,7 @@ public class RecommendController {
     }
     
     
-    private void generateDataModelFile(Path modelFilePath) throws IOException {
+    private void generateSongDataModelFile(Path modelFilePath) throws IOException {
         List<History> list = historyService.list();
         
         // 使用 Stream API 简化代码
@@ -122,12 +144,24 @@ public class RecommendController {
                 )
             ));
         
-        
         try (PrintWriter pw = new PrintWriter(Files.newBufferedWriter(modelFilePath))) {
             m1.forEach((userId, songCountMap) -> {
                 songCountMap.forEach((songId, count) -> {
                     pw.println(String.format("%d,%d,%d", userId, songId, count));
                 });
+            });
+        }
+    }
+    
+    private void generateSongListDataModelFile(Path modelFilePath) throws IOException {
+        List<RankList> rankList = rankListService.list();
+        
+        try (PrintWriter pw = new PrintWriter(Files.newBufferedWriter(modelFilePath))) {
+            rankList.forEach(rank -> {
+                pw.println(String.format("%d,%d,%d",
+                    rank.getUserId(),
+                    rank.getSongListId(),
+                    rank.getScore()));
             });
         }
     }

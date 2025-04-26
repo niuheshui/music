@@ -1,7 +1,8 @@
 package com.example.yin.service.impl;
 
-import com.example.yin.mapper.SongListMapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.yin.domain.SongList;
+import com.example.yin.mapper.SongListMapper;
 import com.example.yin.service.SongListService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,7 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class SongListServiceImpl implements SongListService {
+public class SongListServiceImpl extends ServiceImpl<SongListMapper, SongList> implements SongListService {
 
     @Autowired
     private SongListMapper songListMapper;

@@ -1,10 +1,11 @@
 package com.example.yin.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.yin.domain.SongList;
 
 import java.util.List;
 
-public interface SongListService {
+public interface SongListService extends IService<SongList> {
 
     boolean addSongList (SongList songList);
 

@@ -9,8 +9,6 @@ public interface RankListMapper extends BaseMapper<RankList> {
     @Select("select avg(score) from rank_list where song_list_id = #{songListId}")
     int songListScore(Long songListId);
 
-    int insert(RankList rankList);
-
     int insertSelective(RankList record);
 
     /**

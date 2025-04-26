@@ -37,7 +37,7 @@ public class RankListServiceImpl extends ServiceImpl<RankListMapper, RankList> i
         
         if (entity != null) {
             entity.setScore(rankList.getScore());
-            updateById(entity) ;
+            updateById(entity);
         } else {
             save(rankList);
         }

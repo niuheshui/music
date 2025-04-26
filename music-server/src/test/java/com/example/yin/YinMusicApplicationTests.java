@@ -1,12 +1,8 @@
 package com.example.yin;
 
 import cn.hutool.core.util.RandomUtil;
-import com.example.yin.domain.History;
-import com.example.yin.domain.Song;
-import com.example.yin.domain.User;
-import com.example.yin.service.HistoryService;
-import com.example.yin.service.SongService;
-import com.example.yin.service.UserService;
+import com.example.yin.domain.*;
+import com.example.yin.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.mahout.cf.taste.common.TasteException;
 import org.apache.mahout.cf.taste.impl.model.file.FileDataModel;
@@ -20,7 +16,6 @@ import org.apache.mahout.cf.taste.recommender.UserBasedRecommender;
 import org.apache.mahout.cf.taste.similarity.UserSimilarity;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -34,9 +29,12 @@ import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.groupingBy;
 
-@SpringBootTest
+// @SpringBootTest
 @Slf4j
 public class YinMusicApplicationTests {
+    
+    @Autowired
+    private SongListService songListService;
     
     @Autowired
     private UserService userService;
@@ -47,7 +45,10 @@ public class YinMusicApplicationTests {
     @Autowired
     private HistoryService historyService;
     
-    String ratingsFilePath = "data.csv";
+    @Autowired
+    private RankListService rankListService;
+    
+    String ratingsFilePath = "songlist_data.csv";
     
     @Test
     public void addUser() {
@@ -91,7 +92,7 @@ public class YinMusicApplicationTests {
     public void test() {
         long userId = 1; // 目标用户ID
         int numberOfRecommendations = 10; // 推荐数量
-        int n = 1;
+        int n = 5;
         
         try {
             // 1. 加载用户评分数据
@@ -161,6 +162,23 @@ public class YinMusicApplicationTests {
         
         
         Files.write(Paths.get(ratingsFilePath), sb.toString().getBytes(StandardCharsets.UTF_8));
+    }
+    
+    
+    @Test
+    public void addRank() {
+        List<User> users = userService.allUser();
+        List<SongList> list = songListService.list();
+
+        users.forEach(user -> {
+            list.forEach(songList -> {
+                RankList rankList = new RankList();
+                rankList.setUserId((long) user.getId());
+                rankList.setSongListId((long) songList.getId());
+                rankList.setScore(RandomUtil.randomInt(1, 10));
+                rankListService.addRank(rankList);
+            });
+        });
     }
     
 }
