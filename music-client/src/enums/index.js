@@ -2,7 +2,7 @@ import { AREA } from './area'
 import { ICON } from './icon'
 import { MUSICNAME, BASE_URL } from './music-name'
 import { NAV_NAME, HEADERNAVLIST, SIGNLIST, MENULIST } from './nav'
-import { HOME, SONG_SHEET, SINGER, MY_MUSIC, SETTING, SIGN_IN, SIGN_UP, SIGN_OUT, SEARCH, LYRIC, SONG_SHEET_DETAIL, SINGER_DETAIL, ERROR } from './router-name'
+import { HOME, SONG_SHEET, SINGER, MY_MUSIC, SETTING, SIGN_IN, SIGN_UP, SIGN_OUT, SEARCH, LYRIC, SONG_SHEET_DETAIL, SINGER_DETAIL, ERROR, RECOMMEND } from './router-name'
 import { singerStyle } from './singer'
 import { songStyle } from './songList'
 import { swiperList } from './swiper'
@@ -19,6 +19,7 @@ export {
   SONG_SHEET,
   SINGER,
   MY_MUSIC,
+  RECOMMEND,
   SETTING,
   SIGN_IN,
   SIGN_UP,

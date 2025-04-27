@@ -53,6 +53,7 @@ import {
   SEARCH,
   SIGN_OUT,
   MY_MUSIC,
+  RECOMMEND,
   NAV_NAME
 } from '../../enums'
 
@@ -86,7 +87,7 @@ export default {
       this.showMenu = false
     },
     goPage (path, name) {
-      if (!this.token && path === MY_MUSIC) {
+      if (!this.token && (path === MY_MUSIC || path === RECOMMEND)) {
         this.$notify({
           title: '请先登录喔',
           type: 'warning'
