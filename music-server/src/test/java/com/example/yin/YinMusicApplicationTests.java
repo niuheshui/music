@@ -16,6 +16,7 @@ import org.apache.mahout.cf.taste.recommender.UserBasedRecommender;
 import org.apache.mahout.cf.taste.similarity.UserSimilarity;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -29,7 +30,7 @@ import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.groupingBy;
 
-// @SpringBootTest
+@SpringBootTest
 @Slf4j
 public class YinMusicApplicationTests {
     
@@ -50,21 +51,25 @@ public class YinMusicApplicationTests {
     
     String ratingsFilePath = "songlist_data.csv";
     
+    public User newUser() {
+        User user = new User();
+        user.setUsername(RandomUtil.randomString(6));
+        user.setPassword("123456");
+        user.setAvatar("/img/avatarImages/user.jpg");
+        user.setCreateTime(new Date());
+        user.setUpdateTime(new Date());
+        userService.addUser(user);
+        return user;
+    }
+    
     @Test
     public void addUser() {
         
         List<Song> songs = songService.allSong();
         
         for (int i = 0; i < 10; i++) {
-            User user = new User();
-            user.setUsername(RandomUtil.randomString(6));
-            user.setPassword("123456");
-            user.setAvatar("/img/avatarImages/user.jpg");
-            user.setCreateTime(new Date());
-            user.setUpdateTime(new Date());
-            userService.addUser(user);
         
-            Integer userId = user.getId();
+            Integer userId = newUser().getId();
             
             RandomUtil.randomEles(songs,
                 RandomUtil.randomInt(10, 20))
@@ -167,11 +172,19 @@ public class YinMusicApplicationTests {
     
     @Test
     public void addRank() {
+        for (int i = 0; i < 500; i++) {
+            newUser();
+        }
+        
+        
         List<User> users = userService.allUser();
         List<SongList> list = songListService.list();
 
         users.forEach(user -> {
             list.forEach(songList -> {
+                if (RandomUtil.randomInt(1, 100) < 70) {
+                    return;
+                }
                 RankList rankList = new RankList();
                 rankList.setUserId((long) user.getId());
                 rankList.setSongListId((long) songList.getId());
