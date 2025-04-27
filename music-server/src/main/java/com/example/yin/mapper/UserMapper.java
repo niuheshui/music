@@ -27,7 +27,7 @@ public interface UserMapper extends BaseMapper<User> {
 
     int updateUserMsg(User record);
 
-    int updateUserAvator(User record);
+    int updateUserAvatar(User record);
 
     int deleteUser(Integer id);
 

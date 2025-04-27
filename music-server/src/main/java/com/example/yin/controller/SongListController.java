@@ -115,15 +115,15 @@ public class SongListController {
     //    更新歌单图片
     @ResponseBody
     @RequestMapping(value = "/songList/img/update", method = RequestMethod.POST)
-    public Object updateSongListPic(@RequestParam("file") MultipartFile avatorFile, @RequestParam("id") int id) {
+    public Object updateSongListPic(@RequestParam("file") MultipartFile avatarFile, @RequestParam("id") int id) {
         JSONObject jsonObject = new JSONObject();
 
-        if (avatorFile.isEmpty()) {
+        if (avatarFile.isEmpty()) {
             jsonObject.put("code", 0);
             jsonObject.put("msg", "文件上传失败！");
             return jsonObject;
         }
-        String fileName = System.currentTimeMillis() + avatorFile.getOriginalFilename();
+        String fileName = System.currentTimeMillis() + avatarFile.getOriginalFilename();
         String filePath = System.getProperty("user.dir") + System.getProperty("file.separator") + "img" + System.getProperty("file.separator") + "songListPic";
         File file1 = new File(filePath);
         if (!file1.exists()) {
@@ -131,16 +131,16 @@ public class SongListController {
         }
 
         File dest = new File(filePath + System.getProperty("file.separator") + fileName);
-        String storeAvatorPath = "/img/songListPic/" + fileName;
+        String storeAvatarPath = "/img/songListPic/" + fileName;
         try {
-            avatorFile.transferTo(dest);
+            avatarFile.transferTo(dest);
             SongList songList = new SongList();
             songList.setId(id);
-            songList.setPic(storeAvatorPath);
+            songList.setPic(storeAvatarPath);
             boolean res = songListService.updateSongListImg(songList);
             if (res) {
                 jsonObject.put("code", 1);
-                jsonObject.put("avator", storeAvatorPath);
+                jsonObject.put("avatar", storeAvatarPath);
                 jsonObject.put("msg", "上传成功");
                 return jsonObject;
             } else {

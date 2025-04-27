@@ -74,7 +74,7 @@ public class SongController {
             boolean res = songService.addSong(song);
             if (res) {
                 jsonObject.put("code", 1);
-                jsonObject.put("avator", storeUrlPath);
+                jsonObject.put("avatar", storeUrlPath);
                 jsonObject.put("msg", "上传成功");
                 return jsonObject;
             } else {
@@ -191,7 +191,7 @@ public class SongController {
             boolean res = songService.updateSongPic(song);
             if (res){
                 jsonObject.put("code", 1);
-                jsonObject.put("avator", storeUrlPath);
+                jsonObject.put("avatar", storeUrlPath);
                 jsonObject.put("msg", "上传成功");
                 return jsonObject;
             }else {
@@ -236,7 +236,7 @@ public class SongController {
             boolean res = songService.updateSongUrl(song);
             if (res){
                 jsonObject.put("code", 1);
-                jsonObject.put("avator", storeUrlPath);
+                jsonObject.put("avatar", storeUrlPath);
                 jsonObject.put("msg", "上传成功");
                 return jsonObject;
             }else {

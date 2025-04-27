@@ -29,7 +29,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public boolean updateUserAvatar(User user) {
 
-        return getBaseMapper().updateUserAvator(user) > 0;
+        return getBaseMapper().updateUserAvatar(user) > 0;
     }
 
     @Override

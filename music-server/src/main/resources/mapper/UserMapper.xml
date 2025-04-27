@@ -195,7 +195,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateUserAvator" parameterType="com.example.yin.domain.User" >
+  <update id="updateUserAvatar" parameterType="com.example.yin.domain.User" >
     update user
     <set >
       <if test="avatar != null" >

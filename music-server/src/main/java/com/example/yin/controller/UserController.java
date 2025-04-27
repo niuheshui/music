@@ -43,7 +43,7 @@ public class UserController {
         String birth = req.getParameter("birth").trim();
         String introduction = req.getParameter("introduction").trim();
         String location = req.getParameter("location").trim();
-        String avator = req.getParameter("avator").trim();
+        String avatar = req.getParameter("avatar").trim();
 
         if ("".equals(username)) {
             jsonObject.put("code", 0);
@@ -75,7 +75,7 @@ public class UserController {
         user.setBirth(myBirth);
         user.setIntroduction(introduction);
         user.setLocation(location);
-        user.setAvatar(avator);
+        user.setAvatar(avatar);
         user.setCreateTime(new Date());
         user.setUpdateTime(new Date());
 
@@ -174,7 +174,7 @@ public class UserController {
         String birth = req.getParameter("birth").trim();
         String introduction = req.getParameter("introduction").trim();
         String location = req.getParameter("location").trim();
-        // String avator = req.getParameter("avator").trim();
+        // String avatar = req.getParameter("avatar").trim();
         // System.out.println(username+"  "+password+"  "+sex+"   "+phone_num+"     "+email+"      "+birth+"       "+introduction+"      "+location);
 
         if ("".equals(username)) {
@@ -199,7 +199,7 @@ public class UserController {
         user.setBirth(myBirth);
         user.setIntroduction(introduction);
         user.setLocation(location);
-        // consumer.setAvator(avator);
+        // consumer.setAvatar(avatar);
         user.setUpdateTime(new Date());
 
         boolean res = userService.updateUserMsg(user);
